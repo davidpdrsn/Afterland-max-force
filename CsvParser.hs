@@ -40,7 +40,4 @@ parse :: String -> Either ParseError Csv
 parse str = P.parse csvParser "" str
 
 zipHeadersAndValues :: [String] -> [[String]] -> Csv
-zipHeadersAndValues hs vs = map (foo hs) vs
-  where
-    foo :: [String] -> [String] -> [(String, String)]
-    foo headers line = zip headers line
+zipHeadersAndValues hs vs = map (zip hs) vs
