@@ -10,14 +10,11 @@ data Card = Card { name :: String
                  }
                  deriving (Show, Eq)
 
-maxTotalCost :: Int
-maxTotalCost = 48
-
 maxMaxNumberOfCards :: Int
 maxMaxNumberOfCards = 15
 
-maxCombination :: [Card] -> Maybe [Card]
-maxCombination cards = foldr transform Nothing [1 .. maxMaxNumberOfCards]
+maxCombination :: Int -> [Card] -> Maybe [Card]
+maxCombination maxTotalCost cards = foldr transform Nothing [1 .. maxMaxNumberOfCards]
   where
     transform :: Int -> Maybe [Card] -> Maybe [Card]
     transform size biggestSoFar =
@@ -28,10 +25,10 @@ maxCombination cards = foldr transform Nothing [1 .. maxMaxNumberOfCards]
                                   (Just newMax') -> Just $ biggest newMax' biggestSoFar'
       where
         newMax :: Maybe [Card]
-        newMax = maxWith totalForCollection $ sublists cards size
+        newMax = maxWith (totalForCollection maxTotalCost) $ sublists cards size
 
         biggest :: [Card] -> [Card] -> [Card]
-        biggest x y = if totalForCollection x > totalForCollection y
+        biggest x y = if totalForCollection maxTotalCost x > totalForCollection maxTotalCost y
                         then x
                         else y
 
@@ -43,10 +40,10 @@ maxWith f xs = foldr transform Nothing xs
                                     then (Just a)
                                     else (Just maxSoFar)
 
-totalForCollection :: [Card] -> Int
-totalForCollection cards = if totalCost > maxTotalCost
-                             then 0
-                             else totalMagic
+totalForCollection :: Int -> [Card] -> Int
+totalForCollection maxTotalCost cards = if totalCost > maxTotalCost
+                                          then 0
+                                          else totalMagic
   where
     totalCost = foldr (+) 0 $ map cost cards
     totalMagic = foldr (+) 0 $ map magic cards

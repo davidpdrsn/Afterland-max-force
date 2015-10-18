@@ -23,16 +23,22 @@ main :: IO ()
 main = do
     args <- getArgs
     case args of
-      [filename] -> do
+      [maxTotalCost, filename] -> do
         cards <- cardsFromFile filename
-        let max :: Maybe [Card]
-            max = maxCombination cards
+
+        let
+          maxTotalCost' :: Int
+          maxTotalCost' = read maxTotalCost
+
+          max :: Maybe [Card]
+          max = maxCombination maxTotalCost' cards
+
         case max of
           Nothing -> putStrLn "No max"
           (Just max') -> do
-            let totalMagic = totalForCollection max'
+            let totalMagic = totalForCollection maxTotalCost' max'
                 totalCost = foldr (+) 0 $ map cost max'
             putStrLn $ "Total magic: " ++ show totalMagic
             putStrLn $ "Total cost: " ++ show totalCost
             mapM_ (putStrLn . name) max'
-      _ -> error "No filename given"
+      _ -> putStrLn "Usage: ./maxforce <max total cost> <path to csv file>"

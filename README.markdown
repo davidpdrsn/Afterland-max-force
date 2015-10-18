@@ -5,7 +5,7 @@ Haskell program that calculates the best combination of cards from a list of pos
 ## Usage
 
 ```
-$ ./maxforce cards.csv
+$ ./maxforce 48 cards.csv
 ```
 
 ## Sample CSV file
